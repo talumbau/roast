@@ -23,13 +23,6 @@ def pause(a):
     time.sleep(a)
 
 
-def incrementer(roaster):
-
-    def _incrementer():
-        roaster.next_state()
-
-    return _incrementer
-
 def count_steps(roaster, step_num):
     while True:
         time.sleep(1.0)
@@ -63,12 +56,7 @@ def cli(recipe, cool, fake):
         if fake:
             #Mock the freshroastsr700 object
             with mock.patch('pyroast.roaster.freshroastsr700.freshroastsr700') as mock_fr:
-                #r = Roaster(steps=steps)
-                #r.initialize()
-                #r._roaster.roast.side_effect = r.next_state
-                #r._roaster.roast.side_effect = r._update_func
                 r = create_roaster(steps, fake)
-                #r.roast()
         else:
             r = create_roaster(steps, False)
 
