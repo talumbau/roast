@@ -5,6 +5,7 @@ import mock
 from ..reader import read_recipe
 from ..roaster import Roaster
 import mock
+import threading
 
 h1 = '\033[97m'
 h2 = '\033[96m'
@@ -35,8 +36,22 @@ def create_roaster(steps, fake=True):
     r.initialize()
     #r._roaster.roast.side_effect = r.next_state
     if fake:
-        r._roaster.roast.side_effect = r.next_state
+        #r._roaster.roast.side_effect = r.next_state
+        r._roaster.roast.side_effect = advancer(r)
     return r
+
+def advancer(r):
+    count = 0
+    def func():
+        while count <= len(r._steps):
+            print("we are here")
+            time.sleep(1.0)
+            r.next_state()
+            count += 1
+
+    advancer_thread = threading.Thread(target=func)
+    advacner_thread.start()
+    return func
 
 
 @click.command()
@@ -46,7 +61,7 @@ def create_roaster(steps, fake=True):
 @click.version_option()
 def cli(recipe, cool, fake):
 
-    fake=False
+    #fake=False
     click.clear()
     steps = 1
 
